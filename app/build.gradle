@@ -1,0 +1,77 @@
+import dependencies.AnnotationProcessing
+import dependencies.Build
+import dependencies.Dependencies
+import dependencies.TestDependencies
+import dependencies.Versions
+import dependencies.AndroidTestDependencies
+import dependencies.Java
+import dependencies.Application
+
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion Versions.compilesdk
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId Application.application_id
+        minSdkVersion Versions.minsdk
+        targetSdkVersion Versions.targetsdk
+        versionCode Application.version_code
+        versionName Application.version_name
+        testInstrumentationRunner AndroidTestDependencies.instrumentation_runner
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility = Java.java_version
+        targetCompatibility = Java.java_version
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation Dependencies.kotlin_standard_library
+    implementation Dependencies.ktx
+    implementation Dependencies.appcompat
+    implementation Dependencies.constraint_layout
+    implementation Dependencies.dagger
+    implementation Dependencies.room_runtime
+    implementation Dependencies.room_ktx
+    implementation Dependencies.retrofit
+    implementation Dependencies.retrofit_gson
+    implementation Dependencies.workmanager
+    implementation Dependencies.activity_ktx
+    implementation "com.google.android.gms:play-services-location:17.0.0"
+    kapt AnnotationProcessing.room_compiler
+    kapt AnnotationProcessing.dagger_compiler
+
+
+    testImplementation TestDependencies.mockk
+    testImplementation TestDependencies.jupiter_api
+    testImplementation TestDependencies.jupiter_params
+    testImplementation TestDependencies.junit4
+    testRuntimeOnly TestDependencies.jupiter_engine
+
+    androidTestImplementation AndroidTestDependencies.androidx_test_ext
+    androidTestImplementation AndroidTestDependencies.espresso_core
+
+}

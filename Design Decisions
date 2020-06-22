@@ -1,0 +1,25 @@
+Design Decisions : 
+
+1. For repetitive request Using WorkManager would be the best as it is made for that.
+
+2. Simple MVVM with clean architecture so that later adding features will be very easy. 
+
+3. All dependencies would be abstract so easy to mock out in Unit Testing.
+
+4. We will have only 1 useCase which is fetch data from network and insert in Room DB, Could have seperated the two but as of right now both happen together so no point in seperating them.
+
+5. Need a custom WorkFactory to inject the usecase in the UpdateWeatherWorker which is CoroutineWorker as the useCase will use suspend functions and the retrofit, room call will be suspend call.
+
+6. Using dagger to provide all the Dependencies , as there is just one Main Activity just one component should be enough.
+
+7. The ViewModel will expose a LiveData (from the Dao) , I could have inserted a repository in between but seemed pointless. Activity will observe the LiveData and update UI accordingly.
+
+8. Checking Wifi logic will be written in Worker , if Wifi not available it will return Result.retry() which will try again after a while.
+
+
+
+Future releases : 
+
+1. Swipe to refresh down feature to update the Data.
+
+2. Allow user to check Weather Forecast for other cities by taking input from the user.
